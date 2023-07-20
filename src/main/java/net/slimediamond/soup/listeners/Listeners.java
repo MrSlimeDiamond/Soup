@@ -16,7 +16,9 @@ public class Listeners {
      */
     public void registerListeners() {
         BlockBreakListener blockBreakListener = injector.getInstance(BlockBreakListener.class);
+        BlockPlaceListener blockPlaceListener = injector.getInstance(BlockPlaceListener.class);
 
         Gallium.getEventManager().registerEvent(blockBreakListener);
+        Gallium.getEventManager().registerEvent(blockPlaceListener);
     }
 }

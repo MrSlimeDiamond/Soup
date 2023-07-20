@@ -13,6 +13,7 @@ import org.galliumpowered.annotation.PluginLifecycleListener;
 import org.galliumpowered.command.PluginCommandManager;
 import org.galliumpowered.config.Configuration;
 import org.galliumpowered.config.PluginConfiguration;
+import org.galliumpowered.exceptions.PluginLoadFailException;
 import org.galliumpowered.plugin.PluginContainer;
 import org.galliumpowered.plugin.PluginLifecycleState;
 
@@ -36,14 +37,23 @@ public class Soup {
     @PluginLifecycleListener(PluginLifecycleState.ENABLED)
     public void onPluginEnable() {
         Configuration config = new PluginConfiguration(container);
-        Database database = new Database(config.getValue("db_connection"));
-        Injector injector = Guice.createInjector(new SoupModule(database));
+
+        config.setValue("db_connection", "sqlite:soup.db");
+
+        Database database = new Database("jdbc:" + config.getValue("db_connection"), logger);
+        try {
+            database.open();
+        } catch (Exception e) {
+            throw new PluginLoadFailException(e);
+        }
+
+        Injector injector = Guice.createInjector(new SoupModule(database, logger));
 
         // Call command registration provided in Commands
         // The instance shouldn't need to be used again
-        new Commands(commandManager).registerCommands();
+        new Commands(commandManager, injector).registerCommands();
 
         // Listener registering
-        new Listeners(injector);
+        new Listeners(injector).registerListeners();
     }
 }

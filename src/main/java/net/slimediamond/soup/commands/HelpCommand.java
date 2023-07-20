@@ -10,5 +10,6 @@ public class HelpCommand {
     public void helpCommand(CommandContext ctx) {
         ctx.getCaller().sendMessage(Component.text(Colors.LIGHT_GREEN + "Soup/Help"));
         ctx.getCaller().sendMessage(Component.text(Colors.LIGHT_GREEN + "/soup help" + Colors.WHITE + " - Shows this"));
+        ctx.getCaller().sendMessage(Component.text(Colors.LIGHT_GREEN + "/soup lookup <x> <y> <z>" + Colors.WHITE + " - Look up actions at specific coordinates"));
     }
 }
