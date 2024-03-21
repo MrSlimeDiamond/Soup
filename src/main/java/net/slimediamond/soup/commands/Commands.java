@@ -1,20 +1,22 @@
 package net.slimediamond.soup.commands;
 
 import com.google.inject.Injector;
+import org.galliumpowered.Gallium;
 import org.galliumpowered.annotation.Command;
 import org.galliumpowered.command.CommandContext;
-import org.galliumpowered.command.PluginCommandManager;
+import org.galliumpowered.command.CommandManager;
+import org.galliumpowered.plugin.PluginContainer;
 
 /*
  * /soup base command
  * For parenting commands such as /soup help
  */
 public class Commands {
-    private PluginCommandManager commandManager;
+    private PluginContainer pluginContainer;
     private Injector injector;
 
-    public Commands(PluginCommandManager commandManager, Injector injector) {
-        this.commandManager = commandManager;
+    public Commands(PluginContainer pluginContainer, Injector injector) {
+        this.pluginContainer = pluginContainer;
         this.injector = injector;
     }
 
@@ -27,9 +29,10 @@ public class Commands {
     public void registerCommands() {
         helpCommand = injector.getInstance(HelpCommand.class);
         LookupCommand lookupCommand = injector.getInstance(LookupCommand.class);
-        commandManager.registerCommand(this);
-        commandManager.registerCommand(helpCommand);
-        commandManager.registerCommand(lookupCommand);
+        CommandManager commandManager = Gallium.getCommandManager();
+        commandManager.registerCommand(this, pluginContainer);
+        commandManager.registerCommand(helpCommand, pluginContainer);
+        commandManager.registerCommand(lookupCommand, pluginContainer);
     }
     @Command(aliases = {"soup"}, description = "Soup base command")
     public void baseCommand(CommandContext ctx) {

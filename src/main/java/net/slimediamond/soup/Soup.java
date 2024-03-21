@@ -10,7 +10,6 @@ import net.slimediamond.soup.listeners.Listeners;
 import org.apache.logging.log4j.Logger;
 import org.galliumpowered.annotation.Plugin;
 import org.galliumpowered.annotation.PluginLifecycleListener;
-import org.galliumpowered.command.PluginCommandManager;
 import org.galliumpowered.config.Configuration;
 import org.galliumpowered.config.PluginConfiguration;
 import org.galliumpowered.exceptions.PluginLoadFailException;
@@ -27,9 +26,6 @@ import org.galliumpowered.plugin.PluginLifecycleState;
 public class Soup {
     @Inject
     private Logger logger;
-
-    @Inject
-    private PluginCommandManager commandManager;
 
     @Inject
     private PluginContainer container;
@@ -51,7 +47,7 @@ public class Soup {
 
         // Call command registration provided in Commands
         // The instance shouldn't need to be used again
-        new Commands(commandManager, injector).registerCommands();
+        new Commands(container, injector).registerCommands();
 
         // Listener registering
         new Listeners(injector).registerListeners();
